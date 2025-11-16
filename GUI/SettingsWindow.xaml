@@ -1,0 +1,188 @@
+<Window x:Class="CoreFreqWindows.GUI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings - CoreFreq for Windows" Height="500" Width="600"
+        WindowStartupLocation="CenterOwner"
+        Background="#FF0D1117"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResize">
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="LabelText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#FF8B949E"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="ValueText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#FF1E3A8A" BorderThickness="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+                    <TextBlock Text="⚙️" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Settings" FontSize="18" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" Content="✕" Width="40" Height="30" 
+                       Background="Transparent" BorderThickness="0" Foreground="White" 
+                       Click="CloseButton_Click" Cursor="Hand" FontWeight="Bold" Margin="20,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Background="#FF0D1117">
+            <StackPanel Margin="20">
+                <!-- Update Settings -->
+                <Border Padding="15" Margin="0,0,0,15" CornerRadius="8" BorderThickness="1" 
+                       BorderBrush="#FF30363D" Background="#FF161B22">
+                    <StackPanel>
+                        <TextBlock Text="Update Settings" FontSize="16" FontWeight="SemiBold" 
+                                  Foreground="White" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Update Interval (ms):" 
+                                      Style="{StaticResource LabelText}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="UpdateIntervalTextBox" Grid.Row="0" Grid.Column="1" 
+                                    Text="1000" Background="#FF21262D" Foreground="White" 
+                                    BorderBrush="#FF30363D" Padding="5" Margin="0,0,0,10"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Chart Data Points:" 
+                                      Style="{StaticResource LabelText}"/>
+                            <TextBox x:Name="ChartPointsTextBox" Grid.Row="1" Grid.Column="1" 
+                                    Text="60" Background="#FF21262D" Foreground="White" 
+                                    BorderBrush="#FF30363D" Padding="5"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Display Settings -->
+                <Border Padding="15" Margin="0,0,0,15" CornerRadius="8" BorderThickness="1" 
+                       BorderBrush="#FF30363D" Background="#FF161B22">
+                    <StackPanel>
+                        <TextBlock Text="Display Settings" FontSize="16" FontWeight="SemiBold" 
+                                  Foreground="White" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Temperature Unit:" 
+                                      Style="{StaticResource LabelText}" Margin="0,0,0,10"/>
+                            <ComboBox x:Name="TemperatureUnitComboBox" Grid.Row="0" Grid.Column="1" 
+                                     Background="#FF21262D" Foreground="White" 
+                                     BorderBrush="#FF30363D" Padding="5" Margin="0,0,0,10">
+                                <ComboBoxItem Content="Celsius (°C)" IsSelected="True"/>
+                                <ComboBoxItem Content="Fahrenheit (°F)"/>
+                            </ComboBox>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Frequency Unit:" 
+                                      Style="{StaticResource LabelText}"/>
+                            <ComboBox x:Name="FrequencyUnitComboBox" Grid.Row="1" Grid.Column="1" 
+                                     Background="#FF21262D" Foreground="White" 
+                                     BorderBrush="#FF30363D" Padding="5">
+                                <ComboBoxItem Content="GHz" IsSelected="True"/>
+                                <ComboBoxItem Content="MHz"/>
+                            </ComboBox>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Alert Settings -->
+                <Border Padding="15" Margin="0,0,0,15" CornerRadius="8" BorderThickness="1" 
+                       BorderBrush="#FF30363D" Background="#FF161B22">
+                    <StackPanel>
+                        <TextBlock Text="Alert Settings" FontSize="16" FontWeight="SemiBold" 
+                                  Foreground="White" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Temperature Alert Threshold (°C):" 
+                                      Style="{StaticResource LabelText}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TemperatureAlertTextBox" Grid.Row="0" Grid.Column="1" 
+                                    Text="80" Background="#FF21262D" Foreground="White" 
+                                    BorderBrush="#FF30363D" Padding="5" Margin="0,0,0,10"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Enable Alerts:" 
+                                      Style="{StaticResource LabelText}"/>
+                            <CheckBox x:Name="EnableAlertsCheckBox" Grid.Row="1" Grid.Column="1" 
+                                     IsChecked="True" Foreground="White" 
+                                     VerticalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Window Settings -->
+                <Border Padding="15" CornerRadius="8" BorderThickness="1" 
+                       BorderBrush="#FF30363D" Background="#FF161B22">
+                    <StackPanel>
+                        <TextBlock Text="Window Settings" FontSize="16" FontWeight="SemiBold" 
+                                  Foreground="White" Margin="0,0,0,15"/>
+                        
+                        <CheckBox x:Name="AlwaysOnTopCheckBox" Content="Always on top" 
+                                 IsChecked="False" Foreground="White" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="MinimizeToTrayCheckBox" Content="Minimize to system tray" 
+                                 IsChecked="False" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#FF161B22" BorderThickness="0,1,0,0" BorderBrush="#FF30363D">
+            <Grid Margin="15,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="1" Content="Cancel" Width="80" Height="30" 
+                       Background="#FF21262D" Foreground="White" BorderBrush="#FF30363D" 
+                       Click="CancelButton_Click" Margin="0,0,10,0"/>
+                <Button Grid.Column="1" Content="Save" Width="80" Height="30" 
+                       Background="#FF1E3A8A" Foreground="White" BorderBrush="#FF30363D" 
+                       Click="SaveButton_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+

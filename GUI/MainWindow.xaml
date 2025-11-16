@@ -1,0 +1,396 @@
+<Window x:Class="CoreFreqWindows.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:gui="clr-namespace:CoreFreqWindows.GUI"
+        Title="CoreFreq for Windows" Height="900" Width="1400"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF0D1117"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResize"
+        KeyDown="MainWindow_KeyDown">
+    <Window.Resources>
+        <!-- Gradient Brushes -->
+        <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF1E3A8A" Offset="0"/>
+            <GradientStop Color="#FF3B82F6" Offset="1"/>
+        </LinearGradientBrush>
+        
+        <LinearGradientBrush x:Key="CardGradient" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#FF161B22" Offset="0"/>
+            <GradientStop Color="#FF0D1117" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Styles -->
+        <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FF30363D"/>
+            <Setter Property="Background" Value="{StaticResource CardGradient}"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#40000000" Direction="315" ShadowDepth="3" BlurRadius="8" Opacity="0.5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="HeaderText">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="LabelText">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#FF8B949E"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="ValueText">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Modern Header with Gradient -->
+        <Border Grid.Row="0" Background="{StaticResource HeaderGradient}" BorderThickness="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+                    <TextBlock Text="⚡" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="CoreFreq for Windows" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock x:Name="CpuNameText" Text="CPU: Loading..." FontSize="11" Foreground="#FFE0E0E0" Opacity="0.9"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+                    <Button x:Name="SettingsButton" Content="⚙️" Width="40" Height="30" Background="Transparent" BorderThickness="0" Foreground="White" Click="SettingsButton_Click" Cursor="Hand" ToolTip="Settings"/>
+                    <Button x:Name="MinimizeButton" Content="─" Width="40" Height="30" Background="Transparent" BorderThickness="0" Foreground="White" Click="MinimizeButton_Click" Cursor="Hand"/>
+                    <Button x:Name="CloseButton" Content="✕" Width="40" Height="30" Background="Transparent" BorderThickness="0" Foreground="White" Click="CloseButton_Click" Cursor="Hand" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <TabControl Grid.Row="1" Background="#FF0D1117" BorderThickness="0">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Background" Value="#FF161B22"/>
+                    <Setter Property="Foreground" Value="#FF8B949E"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="15,8"/>
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="#FF58A6FF"/>
+                            <Setter Property="Background" Value="#FF0D1117"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.Resources>
+            
+            <TabItem Header="Monitoring">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#FF0D1117">
+                    <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- System Info Cards -->
+                <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,15">
+                    <Border Margin="0,0,10,0" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="CPU Model" Style="{StaticResource LabelText}" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="CpuText" Text="N/A" Style="{StaticResource ValueText}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Margin="0,0,10,0" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Physical Cores" Style="{StaticResource LabelText}" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="PhysicalCoresText" Text="N/A" Style="{StaticResource ValueText}" FontSize="20" Foreground="#FF58A6FF"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Margin="0,0,10,0" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Logical Cores" Style="{StaticResource LabelText}" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="LogicalCoresText" Text="N/A" Style="{StaticResource ValueText}" FontSize="20" Foreground="#FF58A6FF"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Architecture" Style="{StaticResource LabelText}" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="ArchitectureText" Text="N/A" Style="{StaticResource ValueText}"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- CPU Cores Grid with Visual Indicators -->
+                <Border Grid.Row="1" Padding="15" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="CPU Cores" Style="{StaticResource HeaderText}" Margin="0,0,0,15"/>
+                        <DataGrid x:Name="CoresDataGrid" 
+                                 AutoGenerateColumns="False" 
+                                 IsReadOnly="True"
+                                 Background="Transparent"
+                                 Foreground="White"
+                                 BorderThickness="0"
+                                 HeadersVisibility="Column"
+                                 GridLinesVisibility="None"
+                                 RowBackground="Transparent"
+                                 AlternatingRowBackground="#10000000"
+                                 CanUserAddRows="False"
+                                 CanUserDeleteRows="False"
+                                 CanUserReorderColumns="False"
+                                 CanUserResizeRows="False"
+                                 SelectionMode="Single"
+                                 SelectionUnit="FullRow">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#FF21262D"/>
+                                    <Setter Property="Foreground" Value="#FF58A6FF"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Padding" Value="10,8"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                                    <Setter Property="BorderBrush" Value="#FF30363D"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Core" Binding="{Binding CoreId}" Width="80">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Foreground" Value="#FF58A6FF"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Frequency" Width="140">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding FrequencyDisplay}" VerticalAlignment="Center" Margin="5,0"/>
+                                                <Ellipse Width="8" Height="8" Fill="{Binding FrequencyColor}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Temperature" Width="140">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding TemperatureDisplay}" VerticalAlignment="Center" Margin="5,0"/>
+                                                <Ellipse Width="8" Height="8" Fill="{Binding TemperatureColor}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Utilization" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <ProgressBar Value="{Binding UtilizationValue}" 
+                                                           Maximum="100" 
+                                                           Height="20" 
+                                                           Background="#FF21262D"
+                                                           BorderThickness="0"
+                                                           Margin="5,0">
+                                                    <ProgressBar.Foreground>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <GradientStop Color="#FF238636" Offset="0"/>
+                                                            <GradientStop Color="#FF58A6FF" Offset="0.5"/>
+                                                            <GradientStop Color="#FFFF7B72" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </ProgressBar.Foreground>
+                                                </ProgressBar>
+                                                <TextBlock Text="{Binding UtilizationDisplay}" 
+                                                          HorizontalAlignment="Center" 
+                                                          VerticalAlignment="Center"
+                                                          Foreground="White"
+                                                          FontSize="10"
+                                                          FontWeight="SemiBold"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Min Freq" Binding="{Binding MinFrequencyDisplay}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#FF8B949E"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Max Freq" Binding="{Binding MaxFrequencyDisplay}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#FF8B949E"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Min Temp" Binding="{Binding MinTemperatureDisplay}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#FF8B949E"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Max Temp" Binding="{Binding MaxTemperatureDisplay}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#FF8B949E"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu Background="#FF21262D" BorderBrush="#FF30363D">
+                                    <MenuItem Header="Reset Min/Max" Click="ResetMinMax_Click" Foreground="White">
+                                        <MenuItem.Icon>
+                                            <TextBlock Text="🔄" FontSize="14"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Export to JSON" Click="ExportToJson_Click" Foreground="White">
+                                        <MenuItem.Icon>
+                                            <TextBlock Text="💾" FontSize="14"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Export to CSV" Click="ExportToCsv_Click" Foreground="White">
+                                        <MenuItem.Icon>
+                                            <TextBlock Text="📊" FontSize="14"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator Background="#FF30363D"/>
+                                    <MenuItem Header="Help (F1)" Click="ShowHelp_Click" Foreground="White">
+                                        <MenuItem.Icon>
+                                            <TextBlock Text="❓" FontSize="14"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Real-time Charts -->
+                <UniformGrid Grid.Row="2" Columns="2" Margin="0,0,0,15">
+                    <Border Margin="0,0,10,0" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="CPU Utilization Trend" Style="{StaticResource HeaderText}" Margin="0,0,0,10"/>
+                            <oxy:PlotView x:Name="UtilizationChart" 
+                                         Background="Transparent"
+                                         Height="250"
+                                         Model="{Binding UtilizationModel}"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Temperature Trend" Style="{StaticResource HeaderText}" Margin="0,0,0,10"/>
+                            <oxy:PlotView x:Name="TemperatureChart" 
+                                         Background="Transparent"
+                                         Height="250"
+                                         Model="{Binding TemperatureModel}"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- Package Info Cards -->
+                <UniformGrid Grid.Row="3" Columns="3">
+                    <Border Margin="0,0,10,0" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="🌡️ Package Temperature" Style="{StaticResource LabelText}" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="PackageTempText" Text="N/A" Style="{StaticResource ValueText}" FontSize="24" Foreground="#FFFF7B72"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Margin="0,0,10,0" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="⚡ Package Power" Style="{StaticResource LabelText}" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="PackagePowerText" Text="N/A" Style="{StaticResource ValueText}" FontSize="24" Foreground="#FF58A6FF"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="📊 Total CPU Load" Style="{StaticResource LabelText}" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TotalCpuLoadText" Text="N/A" Style="{StaticResource ValueText}" FontSize="24" Foreground="#FF238636"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+            </Grid>
+        </ScrollViewer>
+            </TabItem>
+            
+            <TabItem Header="Topology" x:Name="TopologyTab">
+                <ContentControl x:Name="TopologyViewContainer"/>
+            </TabItem>
+            
+            <TabItem Header="System Info" x:Name="SystemInfoTab">
+                <ContentControl x:Name="SystemInfoViewContainer"/>
+            </TabItem>
+        </TabControl>
+
+        <!-- Modern Status Bar -->
+        <Border Grid.Row="2" Background="#FF161B22" BorderThickness="0,1,0,0" BorderBrush="#FF30363D">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="StatusText" Text="Initializing..." Foreground="#FF8B949E" VerticalAlignment="Center" Margin="15,8"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="15,8">
+                    <Ellipse x:Name="StatusIndicator" Width="8" Height="8" Fill="#FF238636" Margin="0,0,8,0" VerticalAlignment="Center">
+                        <Ellipse.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                       From="1.0" To="0.3" 
+                                                       Duration="0:0:1" 
+                                                       AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <TextBlock Text="Monitoring" Foreground="#FF8B949E" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
